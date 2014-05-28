@@ -1,7 +1,7 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2014-5-25 15:48
+ * @modified 2014-5-28 20:57
  * 
  */
 window.util = window.util || {};
@@ -210,8 +210,10 @@ window.util.toucher = window.util.toucher || function (dom){
 				EMIT.call(this_touch,'singleTap',e);
 			}
 			actionOver();
-			e.preventDefault();
-			e.stopPropagation();
+			if(this_touch.preventDefault){
+				e.preventDefault();
+				e.stopPropagation();
+			}
 		}
 		
 		/**
@@ -248,8 +250,11 @@ window.util.toucher = window.util.toucher || function (dom){
 	 * touch类
 	 * 
 	 */
-	function touch(DOM){
+	function touch(DOM,param){
+		var param = param || {};
+		
 		this.dom = DOM;
+		this.preventDefault = (typeof(param.preventDefaul)=='boolean' ? param.preventDefault : false);
 		//监听DOM原生事件
 		eventListener.call(this,this.dom);
 	}
