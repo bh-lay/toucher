@@ -1,7 +1,7 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2014-6-3 14:14
+ * @modified 2014-6-3 15:48
  * 
  */
 window.util = window.util || {};
@@ -89,7 +89,7 @@ window.util.toucher = window.util.toucher || function (dom){
 				//符合事件委托，执行
 				if(hasClass(target.className,classStr)){
 					//返回false停止事件冒泡及后续事件，其余继续执行
-					if(callback.call(target,e) == false){
+					if(event_callback(eventName,callback,target,e) == false){
 						return
 					}
 				}else{
@@ -111,15 +111,30 @@ window.util.toucher = window.util.toucher || function (dom){
 					var callback = rest_events[i]['fn'];
 					//未指定事件委托，直接执行
 					if(classStr == null){
-						callback.call(target,e);
+						event_callback(eventName,callback,target,e);
 					}
 				}
 				return;
 			}
 		}
 	}
-
-
+	
+	/**
+	 * 执行绑定的回调函数，并创建一个事件对象
+	 */
+	function event_callback(name,fn,dom,e){
+		var touch = e.touches.length ? e.touches[0] : {};
+		
+		var newE = {
+			'type' : name,
+			'pageX' : touch.clientX || 0,
+			'pageY' : touch.clientY || 0,
+			'screenX' : touch.screenX || 0,
+			'screenY' : touch.screenY || 0
+		};
+		
+		return fn.call(dom,newE);
+	}
 	/**
 	 * 判断swipe方向
 	 */
@@ -147,7 +162,8 @@ window.util.toucher = window.util.toucher || function (dom){
 		var longTap;
 		//记录当前事件是否已为等待结束的状态
 		var isActive = false;
-
+		//记录有坐标信息的事件
+		var eventMark = null;
 		//单次用户操作结束
 		function actionOver(e){
 			isActive = false;
@@ -156,6 +172,9 @@ window.util.toucher = window.util.toucher || function (dom){
 		}
 
 		function touchStart(e){
+			//缓存事件
+			eventMark = e;
+		
 			x1 = e.touches[0].pageX;
 			y1 = e.touches[0].pageY;
 			x2 = 0;
@@ -172,7 +191,8 @@ window.util.toucher = window.util.toucher || function (dom){
 			},500);
 		}
 		function touchend(e){
-			EMIT.call(this_touch,'swipeEnd',e);
+			//touchend中，拿不到坐标位置信息，故使用全局保存下的事件
+			EMIT.call(this_touch,'swipeEnd',eventMark);
 			if(!isActive){
 				return
 			}
@@ -181,18 +201,21 @@ window.util.toucher = window.util.toucher || function (dom){
 				touchDelay = setTimeout(function(){
 					//断定此次事件为轻击事件
 					actionOver();
-					EMIT.call(this_touch,'singleTap',e);
+					EMIT.call(this_touch,'singleTap',eventMark);
 				},250);
 			}else{
 				clearTimeout(touchDelay);
 				actionOver(e);
 				//断定此次事件为连续两次轻击事件
-				EMIT.call(this_touch,'doubleTap',e);
+				EMIT.call(this_touch,'doubleTap',eventMark);
 			}
 			lastTouchTime = now;
 		}
 
 		function touchmove(e){
+			//缓存事件
+			eventMark = e;
+			
 			//断定此次事件为移动事件
 			EMIT.call(this_touch,'swipe',e);
 
@@ -211,6 +234,7 @@ window.util.toucher = window.util.toucher || function (dom){
 				EMIT.call(this_touch,'singleTap',e);
 			}
 			actionOver(e);
+			//是否阻止浏览器默认事件
 			if(this_touch.preventDefault){
 				e.preventDefault();
 				e.stopPropagation();
