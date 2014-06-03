@@ -25,7 +25,7 @@ toucher是一个面向移动端web开发，通过监听原生事件模拟手势�
 ```javascript
 var myTouch = util.toucher(document.getElementById('touchBox'));
 //阻止浏览器默认事件
-myTouch.preventDefault = true;
+//myTouch.preventDefault = true;
 myTouch.on('singleTap',function(e){
     //
 }).on('longTap',function(e){
