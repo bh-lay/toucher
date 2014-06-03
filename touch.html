@@ -122,13 +122,28 @@ bodyTouch.on('singleTap',function(e){
 });
 
 bodyTouch.on('swipeStart','.checkA',function(e){
-	$('.console1').append('swipeStart'+I()+'<br/>');
+	$('.console1').append('swipeStart<br/>');
+	$(this).css({
+		'position':'relative',
+		'background':'#ddd'
+	});
 }).on('swipe','.checkA',function(e){
-	$('.console1').append('swipe'+I()+'<br/>');
-	console.log(this,e);
+	$('.console1').append('swipe-'+e.pageX +'<br/>');
+//	console.log(this,e);
+	$(this).css({
+		'top':e.moveY,
+		'left':e.moveX
+	});
 }).on('swipeEnd','.checkA',function(e){
-	$('.console1').append('swipeEnd'+I()+'<br/>');
+	$('.console1').append('swipeEnd<br/>');
 	console.log(this,e);
+	$(this).animate({
+		'position':'static',
+		'top':0,
+		'left':0,
+		'background':'#fff'
+	},100);
+	$(this).css('background','#fff');
 });
 
 bodyTouch.on('singleTap','.checkB',function(e){
@@ -154,3 +169,4 @@ $('.consoleCnt').click(function(){
 });
 </script>
 </body>
+</html>
