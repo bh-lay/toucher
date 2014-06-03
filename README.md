@@ -8,7 +8,9 @@ toucher是一个面向移动端web开发，通过监听原生事件模拟手势�
 * singleTap：轻击
 * doubleTap：双击
 * longTap：长按
+* swipeStart：滑动开始
 * swipe：滑动（若阻止浏览器默认事件，滑动过程中会持续触发）
+* swipeEnd：滑动结束
 * swipeUp：上划
 * swipeRight：右划
 * swipeDown：下划
