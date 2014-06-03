@@ -43,7 +43,7 @@ window.util.toucher = window.util.toucher || function (dom){
 			className = null;
 			fn = a;
 		}
-		//事件名存在且callback合法，进行监听
+		//事件名存在且callback合法，进行监听绑定
 		if(eventName.length > 0 && typeof(fn) == 'function'){
 			//事件堆无该事件，创建一个事件堆
 			if(!this._events[eventName]){
@@ -68,14 +68,15 @@ window.util.toucher = window.util.toucher || function (dom){
 	 */
 	function EMIT(eventName,e){
 		this._events = this._events || {};
-		//事件堆无该事件，结束运行
+		//事件堆无该事件，结束触发
 		if(!this._events[eventName]){
 			return
 		}
-		//尚未被执行掉的事件绑定
+		//记录尚未被执行掉的事件绑定
 		var rest_events = this._events[eventName];
+		
+		//从事件源：target开始向上冒泡
 		var target = e.target;
-		//从target开始向上冒泡
 		while (1) {
 			//当前需要校验的事件集
 			var eventsList = rest_events;
@@ -93,7 +94,7 @@ window.util.toucher = window.util.toucher || function (dom){
 						return
 					}
 				}else{
-				//不符合执行条件，压回到尚未执行掉的列表中
+					//不符合执行条件，压回到尚未执行掉的列表中
 					rest_events.push(eventsList[i]);
 				}
 			}
@@ -121,6 +122,10 @@ window.util.toucher = window.util.toucher || function (dom){
 	
 	/**
 	 * 执行绑定的回调函数，并创建一个事件对象
+	 * @param[string]事件名
+	 * @param[function]被执行掉的函数
+	 * @param[object]指向的dom
+	 * @param[object]原生event对象
 	 */
 	function event_callback(name,fn,dom,e){
 		var touch = e.touches.length ? e.touches[0] : {};
@@ -128,11 +133,15 @@ window.util.toucher = window.util.toucher || function (dom){
 		var newE = {
 			'type' : name,
 			'pageX' : touch.clientX || 0,
-			'pageY' : touch.clientY || 0,
-			'screenX' : touch.screenX || 0,
-			'screenY' : touch.screenY || 0
+			'pageY' : touch.clientY || 0
 		};
-		
+		//为swipe事件增加交互初始位置及移动距离
+		if(name == 'swipe' && e.startPosition){
+			newE.startX = e.startPosition['pageX'],
+			newE.startY = e.startPosition['pageY'],
+			newE.moveX = newE.pageX - newE.startX,
+			newE.moveY = newE.pageY - newE.startY
+		}
 		return fn.call(dom,newE);
 	}
 	/**
@@ -170,7 +179,8 @@ window.util.toucher = window.util.toucher || function (dom){
 			clearTimeout(longTap);
 			clearTimeout(touchDelay);
 		}
-
+		
+		//触屏开始
 		function touchStart(e){
 			//缓存事件
 			eventMark = e;
@@ -190,6 +200,7 @@ window.util.toucher = window.util.toucher || function (dom){
 				EMIT.call(this_touch,'longTap',e);
 			},500);
 		}
+		//触屏结束
 		function touchend(e){
 			//touchend中，拿不到坐标位置信息，故使用全局保存下的事件
 			EMIT.call(this_touch,'swipeEnd',eventMark);
@@ -211,11 +222,16 @@ window.util.toucher = window.util.toucher || function (dom){
 			}
 			lastTouchTime = now;
 		}
-
+		
+		//手指移动
 		function touchmove(e){
 			//缓存事件
 			eventMark = e;
-			
+			//在原生事件基础上记录初始位置（为swipe事件增加参数传递）
+			e.startPosition = {
+				'pageX' : x1,
+				'pageY' : y1
+			};
 			//断定此次事件为移动事件
 			EMIT.call(this_touch,'swipe',e);
 
@@ -269,8 +285,7 @@ window.util.toucher = window.util.toucher || function (dom){
 		DOM.addEventListener('MSPointerCancel',actionOver);
 		DOM.addEventListener('pointercancel',actionOver);
 	}
-
-
+	
 	/**
 	 * touch类
 	 * 
@@ -285,6 +300,8 @@ window.util.toucher = window.util.toucher || function (dom){
 	}
 	//拓展事件绑定方法
 	touch.prototype['on'] = ON;
+	
+	
 	//对外提供接口
 	exports.init = touch;
 })(util.toucher);
