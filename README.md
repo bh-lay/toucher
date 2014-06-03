@@ -8,13 +8,14 @@ toucher是一个面向移动端web开发，通过监听原生事件模拟手势�
 * singleTap：轻击
 * doubleTap：双击
 * longTap：长按
-* swipe：滑动（滑动过程中会持续触发）
+* swipe：滑动（若阻止浏览器默认事件，滑动过程中会持续触发）
 * swipeUp：上划
 * swipeRight：右划
 * swipeDown：下划
 * swipeleft：左划
 
-
+#说明
+监听的对象不阻止浏览器默认事件，若要用于拖动操作，或滑动更为细腻，可增加preventDefault属性，但此时页面是不能通过拖动当前dom进行滚动的！
 #DEMO
 请使用移动设备或使用调试工具模拟移动设备查看 [demo](http://htmlpreview.github.io/?https://github.com/bh-lay/toucher/blob/master/touch.html)
 
@@ -23,7 +24,8 @@ toucher是一个面向移动端web开发，通过监听原生事件模拟手势�
 
 ```javascript
 var myTouch = util.toucher(document.getElementById('touchBox'));
-
+//阻止浏览器默认事件
+myTouch.preventDefault = true;
 myTouch.on('singleTap',function(e){
     //
 }).on('longTap',function(e){
