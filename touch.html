@@ -12,8 +12,12 @@ body{
 	font-family:'microsoft yahei'
 }
 .consoleCnt{
-	min-height:00%;
-	position:relative;
+	position:absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom:60px;
+	overflow:auto;
 }
 .console{
 	position:relative;
@@ -54,28 +58,28 @@ body{
 <body>
 <div class="consoleCnt">
 <div class="console console1">
-	手势检测中<br/>
+	logger<br/>
 </div>
 <div class="console console3">
-	手势检测中<br/>
+	logger<br/>
 </div>
 <div class="console console2">
-	手势检测中<br/>
+	logger<br/>
 </div>
 </div>
 <div id="toucher">
 	<div class="checkA">
-		<span>事件委托A</span>
+		<span>拖动</span>
 	</div>
 	<div class="checkC">
-		最底层
+		全部
 	</div>
 	<div class="checkB">
-		<span>事件委托B</span>
+		<span>手势</span>
 	</div>
 </div>
 	<script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/1.7.2/jquery.min.js"></script>
-	<script type="text/javascript" src="asset/toucher.js"></script>
+	<script type="text/javascript" src="/frontEnd/util/toucher.js"></script>
 
 	<script type="text/javascript">
 var i = 0;
@@ -90,68 +94,63 @@ function I(){
 
 
 var bodyTouch = util.toucher($('#toucher')[0]);
-
-//console.log(bodyTouch,util.toucher);
+bodyTouch.preventDefault = true;
 
 bodyTouch.on('singleTap',function(e){
-	$('.console3').html('singleTap'+I()+'<br/>');
+	$('.console3').append('singleTap'+I()+'<br/>');
 }).on('doubleTap',function(e){
-	$('.console3').html('doubleTap'+I()+'<br/>');
+	$('.console3').append('doubleTap'+I()+'<br/>');
 }).on('longTap',function(e){
-	$('.console3').html('longTap'+I()+'<br/>');
+	$('.console3').append('longTap'+I()+'<br/>');
+}).on('swipeStart',function(e){
+	$('.console3').append('swipeStart'+I()+'<br/>');
 	console.log(this,e);
 }).on('swipe',function(e){
 	$('.console3').append('swipe'+I()+'<br/>');
+	console.log(this,e);
+}).on('swipeEnd',function(e){
+	$('.console3').append('swipeEnd'+I()+'<br/>');
+	console.log(this,e);
 }).on('swipeUp',function(e){
-	$('.console3').html('swipeUp'+I()+'<br/>');
+	$('.console3').append('swipeUp'+I()+'<br/>');
 }).on('swipeRight',function(e){
-	$('.console3').html('swipeRight'+I()+'<br/>');
+	$('.console3').append('swipeRight'+I()+'<br/>');
 }).on('swipeDown',function(e){
-	$('.console3').html('swipeDown'+I()+'<br/>');
+	$('.console3').append('swipeDown'+I()+'<br/>');
 }).on('swipeLeft',function(e){
-	$('.console3').html('swipeLeft'+I()+'<br/>');
+	$('.console3').append('swipeLeft'+I()+'<br/>');
 });
 
-bodyTouch.on('singleTap','.checkA',function(e){
-	$('.console1').html('singleTap'+I()+'<br/>');
-	console.log(this,e);
-	return false
-}).on('doubleTap','.checkA',function(e){
-	$('.console1').html('doubleTap'+I()+'<br/>');
-}).on('longTap','.checkA',function(e){
-	$('.console1').html('longTap'+I()+'<br/>');
-	console.log(this,e);
+bodyTouch.on('swipeStart','.checkA',function(e){
+	$('.console1').append('swipeStart'+I()+'<br/>');
 }).on('swipe','.checkA',function(e){
 	$('.console1').append('swipe'+I()+'<br/>');
-}).on('swipeUp','.checkA',function(e){
-	$('.console1').html('swipeUp'+I()+'<br/>');
-}).on('swipeRight','.checkA',function(e){
-	$('.console1').html('swipeRight'+I()+'<br/>');
-}).on('swipeDown','.checkA',function(e){
-	$('.console1').html('swipeDown'+I()+'<br/>');
-}).on('swipeLeft','.checkA',function(e){
-	$('.console1').html('swipeLeft'+I()+'<br/>');
+	console.log(this,e);
+}).on('swipeEnd','.checkA',function(e){
+	$('.console1').append('swipeEnd'+I()+'<br/>');
+	console.log(this,e);
 });
 
 bodyTouch.on('singleTap','.checkB',function(e){
-	$('.console2').html('singleTap'+I()+'<br/>');
+	$('.console2').append('singleTap'+I()+'<br/>');
 }).on('doubleTap','.checkB',function(e){
-	$('.console2').html('doubleTap'+I()+'<br/>');
+	$('.console2').append('doubleTap'+I()+'<br/>');
 }).on('longTap','.checkB',function(e){
-	$('.console2').html('longTap'+I()+'<br/>');
-}).on('swipe','.checkB',function(e){
-	$('.console2').append('swipe'+I()+'<br/>');
-	//console.log(this,e);
+	$('.console2').append('longTap'+I()+'<br/>');
 }).on('swipeUp','.checkB',function(e){
-	$('.console2').html('swipeUp'+I()+'<br/>');
+	$('.console2').append('swipeUp'+I()+'<br/>');
 }).on('swipeRight','.checkB',function(e){
-	$('.console2').html('swipeRight'+I()+'<br/>');
+	$('.console2').append('swipeRight'+I()+'<br/>');
 }).on('swipeDown','.checkB',function(e){
-	$('.console2').html('swipeDown'+I()+'<br/>');
+	$('.console2').append('swipeDown'+I()+'<br/>');
 }).on('swipeLeft','.checkB',function(e){
-	$('.console2').html('swipeLeft'+I()+'<br/>');
+	$('.console2').append('swipeLeft'+I()+'<br/>');
 });
 
+
+
+$('.consoleCnt').click(function(){
+	$('.console').html('logger<br/>');
+});
 </script>
 </body>
-</html>
