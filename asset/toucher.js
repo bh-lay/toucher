@@ -46,7 +46,8 @@ window.util.toucher = window.util.toucher || function (dom){
 		//检测callback是否合法,事件名参数是否存在·
 		if(typeof(fn) == 'function' && eventStr && eventStr.length){
 			var eventNames = eventStr.split(/\s+/);
-			for(var i=0,total=eventNames;i<total;i++){
+			for(var i=0,total=eventNames.length;i<total;i++){
+			
 				var eventName = eventNames[i];
 				//事件堆无该事件，创建一个事件堆
 				if(!this._events[eventName]){
