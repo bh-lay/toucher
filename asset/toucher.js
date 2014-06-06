@@ -1,7 +1,7 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2014-6-5 13:24
+ * @modified 2014-6-7 01:10
  * 
  */
 window.util = window.util || {};
@@ -30,7 +30,7 @@ window.util.toucher = window.util.toucher || function (dom){
 	 * 
 	 * @param string 事件名
 	 * @param [string] 事件委托至某个class（可选）
-	 * @param [function] 符合条件的事件被触发时需要执行的回调函数 
+	 * @param function 符合条件的事件被触发时需要执行的回调函数 
 	 * 
 	 */
 	function ON(eventStr,a,b){
@@ -305,58 +305,6 @@ window.util.toucher = window.util.toucher || function (dom){
 	}
 	//拓展事件绑定方法
 	touch.prototype['on'] = ON;
-	touch.prototype['iscroll'] = function(){
-		var DOM = this.dom;
-		var scroll_body = this.dom.childNodes[0];
-		var startY,start_time,moveY;
-		
-		scroll_body.style.position = 'relative';
-		DOM.style.overflow = 'hidden';
-		this.preventDefault = true;
-		function end(){
-			var Y = parseInt($(scroll_body).css('top'));
-			if(Y > 0){
-				$(scroll_body).animate({
-					'top' : 0
-				},100,'jswing');
-			}else if(-Y + $(DOM).height() > DOM.scrollHeight){
-				$(scroll_body).animate({
-					'top' : -(DOM.scrollHeight - $(DOM).height())
-				},100,'jswing');
-			}
-		}
-		this.on('swipeStart',function(e){
-			start_time = new Date();
-			moveY = 0;
-			startY = parseInt($(scroll_body).css('top')) || 0;
-		}).on('swipe',function(e){
-//			console.log(e)
-			moveY = e.moveY;
-			var Y = startY + e.moveY;
-			if(Y > 0){
-				Y = Y / 2;
-			}else if(-parseInt(Y) + $(DOM).height() > DOM.scrollHeight){
-				Y = startY + e.moveY/2;
-			}
-			$(scroll_body).css('top' , Y);
-		}).on('swipeEnd',function(e){
-			var Y = parseInt($(scroll_body).css('top'));
-			
-			var delay = new Date() - start_time;
-			if(delay > 300 || Y > 0 || -parseInt(Y) + $(DOM).height() > DOM.scrollHeight){
-				end();
-			}else{
-				Y = Y + moveY/delay * 60000/delay;
-				console.log(Y);
-				$(scroll_body).stop().animate({
-					'top' : Y
-				},60000/delay,'jswing',function(){
-					end();
-				});
-			}
-			
-		});
-	}
 	
 	//对外提供接口
 	exports.init = touch;
