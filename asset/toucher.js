@@ -33,7 +33,7 @@ window.util.toucher = window.util.toucher || function (dom){
 	 * @param [function] 符合条件的事件被触发时需要执行的回调函数 
 	 * 
 	 */
-	function ON(eventName,a,b){
+	function ON(eventStr,a,b){
 		this._events = this._events || {};
 		var className,fn;
 		if(typeof(a) == 'string'){
@@ -43,16 +43,20 @@ window.util.toucher = window.util.toucher || function (dom){
 			className = null;
 			fn = a;
 		}
-		//事件名存在且callback合法，进行监听绑定
-		if(eventName.length > 0 && typeof(fn) == 'function'){
-			//事件堆无该事件，创建一个事件堆
-			if(!this._events[eventName]){
-				this._events[eventName] = [];
+		//检测callback是否合法,事件名参数是否存在·
+		if(typeof(fn) == 'function' && eventStr && eventStr.length){
+			var eventNames = eventStr.split(/\s+/);
+			for(var i=0,total=eventNames;i<total;i++){
+				var eventName = eventNames[i];
+				//事件堆无该事件，创建一个事件堆
+				if(!this._events[eventName]){
+					this._events[eventName] = [];
+				}
+				this._events[eventName].push({
+					'className' : className,
+					'fn' : fn
+				});
 			}
-			this._events[eventName].push({
-				'className' : className,
-				'fn' : fn
-			});
 		}
 
 		//提供链式调用的支持
