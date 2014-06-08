@@ -1,16 +1,22 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2014-6-7 01:10
+ * @modified 2014-6-8 9:6
  * 
  */
-window.util = window.util || {};
 
-window.util.toucher = window.util.toucher || function (dom){
-	return new window.util.toucher.init(dom);
-};
-
-(function(exports){
+ 
+(function(global,doc,factoryFn){
+	var factory = factoryFn();
+	
+	global.util = global.util || {};
+	global.util.toucher = global.util.toucher || factory;
+	//提供CommonJS规范的接口
+	global.define && define(function(require,exports,module){
+		//对外接口
+		return factory;
+	});
+})(this,document,function(){
 	/**
 	 * 检查class在不在多个class中 
 	 */
@@ -307,11 +313,7 @@ window.util.toucher = window.util.toucher || function (dom){
 	touch.prototype['on'] = ON;
 	
 	//对外提供接口
-	exports.init = touch;
-})(util.toucher);
-
-//提供CommonJS规范的接口
-window.define && define(function(require,exports,module){
-	//对外接口
-	return window.util.toucher;
+	return function (dom){
+		return new touch(dom);
+	};
 });
