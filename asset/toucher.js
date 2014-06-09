@@ -1,14 +1,14 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2014-6-8 9:6
+ * @modified 2014-6-9 16:58
  * 
  */
 
  
 (function(global,doc,factoryFn){
 	var factory = factoryFn();
-	
+	//提供window.util.toucher()接口
 	global.util = global.util || {};
 	global.util.toucher = global.util.toucher || factory;
 	//提供CommonJS规范的接口
@@ -153,7 +153,14 @@
 			newE.moveX = newE.pageX - newE.startX,
 			newE.moveY = newE.pageY - newE.startY
 		}
-		return fn.call(dom,newE);
+		var call_result = fn.call(dom,newE);
+		//若绑定方法返回false，阻止浏览器默认事件
+		if(call_result == false){
+			e.preventDefault();
+			e.stopPropagation();
+		}
+		
+		return call_result;
 	}
 	/**
 	 * 判断swipe方向
@@ -261,11 +268,6 @@
 				EMIT.call(this_touch,'singleTap',e);
 			}
 			actionOver(e);
-			//是否阻止浏览器默认事件
-			if(this_touch.preventDefault){
-				e.preventDefault();
-				e.stopPropagation();
-			}
 		}
 
 		/**
@@ -305,7 +307,6 @@
 		var param = param || {};
 
 		this.dom = DOM;
-		this.preventDefault = (typeof(param.preventDefaul)=='boolean' ? param.preventDefault : false);
 		//监听DOM原生事件
 		eventListener.call(this,this.dom);
 	}
