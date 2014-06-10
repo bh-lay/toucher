@@ -1,7 +1,7 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2014-6-10 11:43
+ * @modified 2014-6-10 15:19
  * 
  */
 
@@ -83,6 +83,24 @@
 		//从事件源：target开始向上冒泡
 		var target = e.target;
 		while (1) {
+			//若没有需要执行的事件，结束冒泡
+			if(rest_events.length ==0){
+				return;
+			}
+			//若已经冒泡至顶，检测顶级绑定，结束冒泡
+			if(target == this.dom || !target){
+				//遍历剩余所有事件绑定
+				for(var i=0,total=rest_events.length;i<total;i++){
+					var classStr = rest_events[i]['className'];
+					var callback = rest_events[i]['fn'];
+					//未指定事件委托，直接执行
+					if(classStr == null){
+						event_callback(eventName,callback,target,e);
+					}
+				}
+				return;
+			}
+			
 			//当前需要校验的事件集
 			var eventsList = rest_events;
 			//置空尚未执行掉的事件集
@@ -105,23 +123,6 @@
 			}
 			//向上冒泡
 			target = target.parentNode;
-			//若没有 需要执行的事件，结束冒泡
-			if(rest_events.length ==0){
-				return;
-			}
-			//若已经冒泡至顶，检测顶级绑定，结束冒泡
-			if(target == this.dom || !target){
-				//遍历剩余所有事件绑定
-				for(var i=0,total=rest_events.length;i<total;i++){
-					var classStr = rest_events[i]['className'];
-					var callback = rest_events[i]['fn'];
-					//未指定事件委托，直接执行
-					if(classStr == null){
-						event_callback(eventName,callback,target,e);
-					}
-				}
-				return;
-			}
 		}
 	}
 	
