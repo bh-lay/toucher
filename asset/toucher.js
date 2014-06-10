@@ -18,16 +18,10 @@
 	});
 })(this,document,function(){
 	/**
-	 * 检查class在不在多个class中 
+	 * 判断是否拥有某个class
 	 */
-	function hasClass(classAll,classSingle){
-		var classAll= classAll || '';
-		var classArray = classAll.split(/\s/g);
-		for(var i=0,total=classArray.length;i<total;i++){
-			if(classArray[i] == classSingle){
-				return true;
-			}
-		}
+	function hasClass(dom,classSingle){
+		return dom.className.match(new RegExp('(\\s|^)' + classSingle +'(\\s|$)'));
 	}
 
 	/**
@@ -99,7 +93,7 @@
 				var classStr = eventsList[i]['className'];
 				var callback = eventsList[i]['fn'];
 				//符合事件委托，执行
-				if(hasClass(target.className,classStr)){
+				if(hasClass(target,classStr)){
 					//返回false停止事件冒泡及后续事件，其余继续执行
 					if(event_callback(eventName,callback,target,e) == false){
 						return
