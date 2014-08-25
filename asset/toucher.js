@@ -7,16 +7,19 @@
 
  
 (function(global,doc,factoryFn){
-	var factory = factoryFn();
+	//初始化toucher主方法
+	var factory = factoryFn(global,doc);
+	
 	//提供window.util.toucher()接口
 	global.util = global.util || {};
 	global.util.toucher = global.util.toucher || factory;
+	
 	//提供CommonJS规范的接口
 	global.define && define(function(require,exports,module){
 		//对外接口
 		return factory;
 	});
-})(this,document,function(){
+})(this,document,function(window,document){
 	/**
 	 * 判断是否拥有某个class
 	 */
@@ -138,6 +141,7 @@
 		
 		var newE = {
 			'type' : name,
+			'target' : e.target,
 			'pageX' : touch.clientX || 0,
 			'pageY' : touch.clientY || 0
 		};
@@ -174,14 +178,19 @@
 
 		//轻击开始时间
 		var touchStartTime = 0;
+		
 		//记录上一次点击时间
 		var lastTouchTime = 0;
+		
 		//记录初始轻击的位置
 		var x1,y1,x2,y2;
+		
 		//轻击事件的延时器
 		var touchDelay;
+		
 		//测试长按事件的延时器
 		var longTap;
+		
 		//记录当前事件是否已为等待结束的状态
 		var isActive = false;
 		//记录有坐标信息的事件
