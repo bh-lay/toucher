@@ -4,17 +4,19 @@ toucher
 toucher是一个面向移动端web开发，通过监听原生事件模拟手势事件的库。
 
 #目前支持哪些事件
+基本事件
+ * singleTap：轻击
+ * doubleTap：双击
+ * longTap：长按
+ * swipeUp：上划
+ * swipeRight：右划
+ * swipeDown：下划
+ * swipeleft：左划
 
-* singleTap：轻击
-* doubleTap：双击
-* longTap：长按
-* swipeStart：滑动开始
-* swipe：滑动（若阻止浏览器默认事件，滑动过程中会持续触发）
-* swipeEnd：滑动结束
-* swipeUp：上划
-* swipeRight：右划
-* swipeDown：下划
-* swipeleft：左划
+高级事件
+ * swipeStart：滑动开始
+ * swipe：滑动（阻止浏览器默认事件，滑动过程效果更佳）
+ * swipeEnd：滑动结束
 
 #说明
 目前尚不支持双指操作的事件，此类事件可能会在下次大的更新之后作为补充加入进来。
