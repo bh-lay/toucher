@@ -94,7 +94,6 @@ function I(){
 
 
 var bodyTouch = util.toucher($('#toucher')[0]);
-bodyTouch.preventDefault = true;
 
 bodyTouch.on('singleTap',function(e){
 	$('.console3').append('singleTap'+I()+'<br/>');
@@ -134,6 +133,7 @@ bodyTouch.on('swipeStart','.checkA',function(e){
 		'top':e.moveY,
 		'left':e.moveX
 	});
+	return false;
 }).on('swipeEnd','.checkA',function(e){
 	$('.console1').append('swipeEnd<br/>');
 	console.log(this,e);
