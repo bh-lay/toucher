@@ -1,7 +1,7 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2014-8-25 20:23
+ * @modified 2015-3-7 01:02
  * 
  */
 
@@ -146,7 +146,7 @@
 			'pageY' : touch.clientY || 0
 		};
 		//为swipe事件增加交互初始位置及移动距离
-		if(name == 'swipe' && e.startPosition){
+		if(name.match(/^swipe/) && e.startPosition){
 			newE.startX = e.startPosition['pageX'],
 			newE.startY = e.startPosition['pageY'],
 			newE.moveX = newE.pageX - newE.startX,
@@ -251,8 +251,8 @@
 			eventMark = e;
 			//在原生事件基础上记录初始位置（为swipe事件增加参数传递）
 			e.startPosition = {
-				'pageX' : x1,
-				'pageY' : y1
+				pageX : x1,
+				pageY : y1
 			};
 			//断定此次事件为移动事件
 			EMIT.call(this_touch,'swipe',e);
@@ -260,8 +260,8 @@
 			if(!isActive){
 				return
 			}
-    	   x2 = e.touches[0].pageX
-        	y2 = e.touches[0].pageY
+  	  x2 = e.touches[0].pageX
+      y2 = e.touches[0].pageY
 			if(Math.abs(x1-x2)>2 || Math.abs(y1-y2)>2){
 				//断定此次事件为移动手势
 				var direction = swipeDirection(x1, x2, y1, y2);
