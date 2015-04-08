@@ -58,13 +58,13 @@ body{
 <body>
 <div class="consoleCnt">
 <div class="console console1">
-	logger<br/>
+	--logger--<br/>
 </div>
 <div class="console console3">
-	logger<br/>
+	--logger--<br/>
 </div>
 <div class="console console2">
-	logger<br/>
+	--logger--<br/>
 </div>
 </div>
 <div id="toucher">
@@ -94,7 +94,6 @@ function I(){
 
 
 var bodyTouch = util.toucher($('#toucher')[0]);
-bodyTouch.preventDefault = true;
 
 bodyTouch.on('singleTap',function(e){
 	$('.console3').append('singleTap'+I()+'<br/>');
@@ -134,6 +133,7 @@ bodyTouch.on('swipeStart','.checkA',function(e){
 		'top':e.moveY,
 		'left':e.moveX
 	});
+	return false;
 }).on('swipeEnd','.checkA',function(e){
 	$('.console1').append('swipeEnd<br/>');
 	console.log(this,e);
@@ -165,7 +165,7 @@ bodyTouch.on('singleTap','.checkB',function(e){
 
 
 $('.consoleCnt').click(function(){
-	$('.console').html('logger<br/>');
+	$('.console').html('--logger--<br/>');
 });
 </script>
 </body>
