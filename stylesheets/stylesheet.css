@@ -246,20 +246,21 @@ a {
 
 /** list **/
 .list-group{
-  padding: 30px;
-  background: #eee;
 }
 .list-item{
   position:relative;
   height: 50px;
-  border-top: 1px solid #ddd;
-  background: #fff;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  background: #eee;
+  overflow: hidden;
 }
 .list-item:last-child{
   border-bottom: 1px solid #ddd;
 }
 .list-item-body{
-  
+  padding: 0 20px;
+  line-height: 50px;
   transition: .2s;
 }
 .list-item-del{

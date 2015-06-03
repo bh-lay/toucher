@@ -5,7 +5,6 @@
     <title>Toucher by bh-lay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
@@ -20,15 +19,7 @@
 
     <section class="main-content">
   <h3>左划删除</h3>
-<div class="list-group">
-  <div class="list-item">
-    <div class="list-item-body">
-      剧中人
-    </div>
-    <div class="list-item-del">
-      删除
-    </div>
-  </div>
+<div class="list-group" id="listGroup">
   <div class="list-item">
     <div class="list-item-body">
       剧中人
@@ -39,6 +30,34 @@
   </div>
 </div>
     </section>
-  </body>
+<script src="toucher.js"></script>
+<script>
+  /**
+   * 判断dom是否拥有某个class
+   */
+  function hasClass(dom,classSingle){
+    return dom.className && dom.className.match(new RegExp('(\\s|^)' + classSingle + '(\\s|$)')) || false;
+  }
+  function addClass(dom, cls) {
+    if (!this.hasClass(dom, cls)) dom.className += " " + cls;
+  }
+  function removeClass(dom, cls) {
+    if (hasClass(dom, cls)) {
+      var reg = new RegExp('(\\s+|^)' + cls + '(\\s+|$)');
+      dom.className = dom.className.replace(reg, ' ');
+    }
+  }
+  util.toucher(document.getElementById('listGroup'))
+  .on('swipeLeft','.list-item',function(){
+    addClass(this,'list-item-status-del');
+  })
+  .on('swipeRight','.list-item',function(){
+    removeClass(this,'list-item-status-del');
+  })
+  .on('singleTap','.list-item',function(){
+    alert('你真的要删除？')
+  });
+</script>
+</body>
 </html>
 
