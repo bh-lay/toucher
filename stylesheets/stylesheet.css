@@ -243,3 +243,40 @@ a {
 @media screen and (max-width: 42em) {
   .site-footer {
     font-size: 0.9rem; } }
+
+/** list **/
+.list-group{
+  padding: 30px;
+  background: #eee;
+}
+.list-item{
+  position:relative;
+  height: 50px;
+  border-top: 1px solid #ddd;
+  background: #fff;
+}
+.list-item:last-child{
+  border-bottom: 1px solid #ddd;
+}
+.list-item-body{
+  
+  transition: .2s;
+}
+.list-item-del{
+  position: absolute;
+  height: 100%;
+  width: 80px;
+  top: 0;
+  right: -80px;
+  line-height: 50px;
+  background: #e00;
+  color: #fff;
+  text-align: center;
+  transition: .2s;
+}
+.list-item-status-del .list-item-body{
+  margin-left: -80px;
+}
+.list-item-status-del .list-item-del{
+  right: 0;
+}
