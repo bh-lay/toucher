@@ -18,8 +18,9 @@
     </section>
 
     <section class="main-content">
-  <h3>左划删除</h3>
-<div class="list-group" id="listGroup">
+<h3>左划删除</h3>
+<p>移动交互中常用的删除手势，用于删除列表中的对象。相关事件：左划<small>swipeLeft</small>、右划<small>swipeRight</small>、轻击<small>singleTap</small></p>
+<div class="list-group" id="listGroupA">
   <div class="list-item">
     <div class="list-item-body">
       剧中人
@@ -29,6 +30,35 @@
     </div>
   </div>
 </div>
+<pre>
+<code>util.toucher(document.getElementById('listGroupA'))
+.on('swipeLeft','.list-item',function(){
+  addClass(this,'list-item-status-del');
+  return false;
+})
+.on('swipeRight','.list-item',function(){
+  removeClass(this,'list-item-status-del');
+  return false;
+})
+.on('singleTap','.list-item-del',function(){
+  alert('这只是个demo！');
+});</code>
+</pre>
+<h3>长按删除</h3>
+<p>移动交互中另一种常用的删除动作，将删除功能已藏在界面不可见的位置以避免误操作。相关事件：长按<small>longTap</small></p>
+<div class="list-group" id="listGroupB">
+  <div class="list-item">
+    <div class="list-item-body">
+      剧中人
+    </div>
+  </div>
+</div>
+<pre>
+<code>util.toucher(document.getElementById('listGroupB'))
+.on('longTap','.list-item',function(){
+  alert('这只是个demo！');
+});</code>
+</pre>
     </section>
 <script src="toucher.js"></script>
 <script>
@@ -47,16 +77,10 @@
       dom.className = dom.className.replace(reg, ' ');
     }
   }
-  util.toucher(document.getElementById('listGroup'))
-  .on('swipeLeft','.list-item',function(){
-    addClass(this,'list-item-status-del');
-  })
-  .on('swipeRight','.list-item',function(){
-    removeClass(this,'list-item-status-del');
-  })
-  .on('singleTap','.list-item',function(){
-    alert('你真的要删除？')
-  });
+  var codes = document.querySelectorAll('pre code');
+  for(var index=codes.length-1;index>=0;index--){
+    eval('(function (){' +  codes[index].innerHTML + '})()')
+  }
 </script>
 </body>
 </html>

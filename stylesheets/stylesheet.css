@@ -246,6 +246,7 @@ a {
 
 /** list **/
 .list-group{
+  margin-bottom: 20px;
 }
 .list-item{
   position:relative;
@@ -254,9 +255,6 @@ a {
   border-bottom: 1px solid #ccc;
   background: #eee;
   overflow: hidden;
-}
-.list-item:last-child{
-  border-bottom: 1px solid #ddd;
 }
 .list-item-body{
   padding: 0 20px;
