@@ -279,3 +279,41 @@ a {
 .list-item-status-del .list-item-del{
   right: 0;
 }
+
+.assistive-touch-cnt{
+  position: relative;
+  height: 200px;
+}
+.assistiveTouch{
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 20px;
+  background: rgba(0,0,0,.7);
+}
+.assistiveTouch:before,
+.assistiveTouch:after,
+.assistiveTouch span{
+  content: '';
+  position: absolute;
+  border-radius: 100%;
+  background: rgba(255,255,255,.5);
+}
+.assistiveTouch:before{
+  width: 100px;
+  height: 100px;
+  top: 10px;
+  left: 10px;
+}
+.assistiveTouch span{
+  width: 80px;
+  height: 80px;
+  top: 20px;
+  left: 20px;
+}
+.assistiveTouch:after{
+  width: 60px;
+  height: 60px;
+  top: 30px;
+  left: 30px;
+}
