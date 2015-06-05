@@ -11,20 +11,30 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">Toucher</h1>
-      <h2 class="project-tagline">面向移动端模拟手势的类库</h2>
+      <h2 class="project-tagline">面向移动端的手势类库</h2>
       <a href="https://github.com/bh-lay/toucher" class="btn">View on GitHub</a>
       <a href="https://github.com/bh-lay/toucher/zipball/master" class="btn download">Download .zip</a>
       <a href="https://github.com/bh-lay/toucher/tarball/master" class="btn download">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
-<blockquote>
-  <p>Toucher仅仅提供移动端手势的事件支持，下面的例子皆为使用手势完成的demo，可供参考。</p>
+  <p>Toucher目前仅仅支持单指操作，双指操作有待开发。提供基本的移动端手势事件支持，下面的例子皆为使用手势配合自己的逻辑代码完成的demo，可供参考。</p>
 <h3>基本事件</h3>
-<p>轻击<small>singleTap</small>、双击<small>doubleTap</small>、长按<small>longTap</small>、上划<small>swipeUp</small>、右划<small>swipeRight</small>、下划<small>swipeDown</small>、左划<small>swipeleft</small></p>
+<ul>
+  <li>轻击<small>singleTap</small>：触摸一次屏幕，需要完成手指从放下到抬起，且中途无移动。</li>
+  <li>双击<small>doubleTap</small>：快速触摸两次屏幕。</li>
+  <li>长按<small>longTap</small>：手指长时间按下不松，触发此事件。</li>
+  <li>上划<small>swipeUp</small>：手指快速向上滑动。</li>
+  <li>右划<small>swipeRight</small>：手指快速向右滑动。</li>
+  <li>下划<small>swipeDown</small>：手指快速向下滑动。</li>
+  <li>左划<small>swipeleft</small>：手指快速向左滑动。</li>
+</ul>
 <h3>高级事件</h3>
-<p>滑动开始<small>swipeStart</small>、滑动<small>swipe</small>、滑动结束<small>swipeEnd</small></p>
-</blockquote>
+<ul>
+  <li>滑动开始<small>swipeStart</small>：手指落下屏幕一瞬间即会触发此事件。</li>
+  <li>滑动<small>swipe</small>：手指在屏幕上移动时，会持续触发此事件。</li>
+  <li>滑动结束<small>swipeEnd</small>：手指离开屏幕一瞬间即会触发此事件。</li>
+</ul>
       
 <h3>左划删除</h3>
 <p>移动交互中常用的删除手势，用于删除列表中的对象。</p>
@@ -128,20 +138,18 @@ util.toucher(elem)
 <code>var start_top,
     elem = document.getElementById('progressB');
 function rangeControl(top,elem_bar){
-  //top 不能小于 0
   top = Math.max(top,0);
-  //left加自身宽度 不能大于总宽度
-  return Math.min(left,elem.clientWidth - elem_bar.clientWidth);
+  return Math.min(top,elem.clientHeight - elem_bar.clientHeight);
 }
 util.toucher(elem)
 .on('swipeStart','.progress-bar',function(e){
-  start_left = parseInt(this.style.left) || 0;
+  start_top = parseInt(this.style.top) || 0;
   this.innerHTML = '';
 }).on('swipe','.progress-bar',function(e){
-  this.style.left = rangeControl(start_left + e.moveX,this) + 'px';
+  this.style.top = rangeControl(start_top + e.moveY,this) + 'px';
   return false;
 }).on('swipeEnd','.progress-bar',function(e){
-  this.innerHTML = Math.ceil(rangeControl(start_left + (e.moveX||0),this)/(elem.clientWidth - this.clientWidth) * 100) + '%';
+  this.innerHTML = Math.ceil(rangeControl(start_top + (e.moveY||0),this)/(elem.clientHeight - this.clientHeight) * 100) + '%';
   return false;
 });</code>
 </pre>
@@ -152,6 +160,15 @@ util.toucher(elem)
 <script src="javascript/toucher.js"></script>
 <script src="javascript/highlight.js"></script>
 <script>
+  function isSupportTouch(){
+    var tests = 'onMSPointerDown,onpointerdown,ontouchstart'.split(',');
+    for(var i = tests.length-1;i>=0;i--){
+      if(tests[i] in document){
+        return true;
+      }
+    }
+    return false;
+  }
   /**
    * 判断dom是否拥有某个class
    */
@@ -167,11 +184,17 @@ util.toucher(elem)
       dom.className = dom.className.replace(reg, ' ');
     }
   }
-  var codes = document.querySelectorAll('pre code');
-  for(var index=codes.length-1;index>=0;index--){
-    eval('(function (){' +  codes[index].innerHTML + '})()')
+  if(isSupportTouch()){
+    var codes = document.querySelectorAll('pre code');
+    for(var index=codes.length-1;index>=0;index--){
+      eval('(function (){' +  codes[index].innerHTML + '})()')
+    }
+  }else{
+    var a = document.createElement('div');
+    addClass(a,'error-pop');
+    a.innerHTML = '不支持触摸事件，若要体验demo，请使用移动设备或模拟器。'
+    document.body.appendChild(a);
   }
-  
   hljs.initHighlighting();
 </script>
 </body>
