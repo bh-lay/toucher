@@ -18,6 +18,7 @@ a {
 .btn {
   display: inline-block;
   margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
   color: rgba(255, 255, 255, 0.7);
   background-color: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.2);
@@ -34,24 +35,15 @@ a {
   background-color: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.3); }
 
-@media screen and (min-width: 64em) {
-  .btn {
-    padding: 0.75rem 1rem; } }
-
-@media screen and (min-width: 42em) and (max-width: 64em) {
-  .btn {
-    padding: 0.6rem 0.9rem;
-    font-size: 0.9rem; } }
-
 @media screen and (max-width: 42em) {
   .btn {
     display: block;
     width: 100%;
     padding: 0.75rem;
     font-size: 0.9rem; }
-    .btn + .btn {
-      margin-top: 1rem;
-      margin-left: 0; } }
+  .download{
+    display: none; }
+    }
 
 .page-header {
   color: #fff;
@@ -167,8 +159,8 @@ a {
 .main-content ul, .main-content ol {
   margin-top: 0; }
 .main-content blockquote {
-  padding: 0 1rem;
-  margin-left: 0;
+  padding-left: 1rem;
+  margin: 0;
   color: #819198;
   border-left: 0.3rem solid #dce6f0; }
   .main-content blockquote > :first-child {
@@ -281,11 +273,10 @@ a {
 }
 
 .assistive-touch-cnt{
-  position: relative;
-  height: 200px;
+  margin-bottom: 20px;
 }
 .assistiveTouch{
-  position: absolute;
+  position: relative;
   width: 120px;
   height: 120px;
   border-radius: 20px;
@@ -316,4 +307,23 @@ a {
   height: 60px;
   top: 30px;
   left: 30px;
+}
+
+.progress-cnt{
+  height: 40px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  background: #5a3;
+  overflow: hidden;
+}
+.progress-bar{
+  position: relative;
+  width: 50px;
+  height: 40px;
+  background: #380;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 14px;
+  color: #fff;
 }

@@ -6,20 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/paraiso.light.css" media="screen">
   </head>
   <body>
     <section class="page-header">
       <h1 class="project-name">Toucher</h1>
       <h2 class="project-tagline">面向移动端模拟手势的类库</h2>
       <a href="https://github.com/bh-lay/toucher" class="btn">View on GitHub</a>
-      <a href="https://github.com/bh-lay/toucher/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/bh-lay/toucher/tarball/master" class="btn">Download .tar.gz</a>
+      <a href="https://github.com/bh-lay/toucher/zipball/master" class="btn download">Download .zip</a>
+      <a href="https://github.com/bh-lay/toucher/tarball/master" class="btn download">Download .tar.gz</a>
     </section>
 
     <section class="main-content">
+<blockquote>
+  <p>Toucher仅仅提供移动端手势的事件支持，下面的例子皆为使用手势完成的demo，可供参考。</p>
+<h3>基本事件</h3>
+<p>轻击<small>singleTap</small>、双击<small>doubleTap</small>、长按<small>longTap</small>、上划<small>swipeUp</small>、右划<small>swipeRight</small>、下划<small>swipeDown</small>、左划<small>swipeleft</small></p>
+<h3>高级事件</h3>
+<p>滑动开始<small>swipeStart</small>、滑动<small>swipe</small>、滑动结束<small>swipeEnd</small></p>
+</blockquote>
+      
 <h3>左划删除</h3>
-<p>移动交互中常用的删除手势，用于删除列表中的对象。相关事件：左划<small>swipeLeft</small>、右划<small>swipeRight</small>、轻击<small>singleTap</small></p>
+<p>移动交互中常用的删除手势，用于删除列表中的对象。</p>
+<p>相关事件：左划<small>swipeLeft</small>、右划<small>swipeRight</small>、轻击<small>singleTap</small></p>
 <div class="list-group" id="listGroupA">
   <div class="list-item">
     <div class="list-item-body">
@@ -46,7 +55,8 @@
 </pre>
 
 <h3>长按删除</h3>
-<p>移动交互中另一种常用的删除动作，将删除功能已藏在界面不可见的位置以避免误操作。相关事件：长按<small>longTap</small></p>
+<p>移动交互中另一种常用的删除动作，将删除功能已藏在界面不可见的位置以避免误操作。</p>
+<p>相关事件：长按<small>longTap</small></p>
 <div class="list-group" id="listGroupB">
   <div class="list-item">
     <div class="list-item-body">
@@ -61,25 +71,86 @@
 });</code>
 </pre>
 
-<h3>拖动</h3>
-<p>移动交互中另一种常用的删除动作，将删除功能已藏在界面不可见的位置以避免误操作。相关事件：长按<small>longTap</small></p>
+<h3>自由拖动</h3>
+<p>UI组件中可能会有悬浮类工具，需要可以随意拖动。</p>
+<p>相关事件：拖动开始<small>swipeStart</small>、拖动中<small>swipe</small>、拖动结束<small>swipeEnd</small></p>
 <div class="assistive-touch-cnt">
   <div class="assistiveTouch" id="assistiveTouch"><span></span></div>
 </div>
 <pre>
-<code>var stsrt_x,start_y;
+<code>var start_left,start_top;
 util.toucher(document.getElementById('assistiveTouch'))
 .on('swipeStart',function(e){
-  start_x = parseInt(this.style.left) || 0;
-  start_y = parseInt(this.style.top) || 0;
+  start_left = parseInt(this.style.left) || 0;
+  start_top = parseInt(this.style.top) || 0;
+  this.style.transition = 'none';
 }).on('swipe',function(e){
-  this.style.left = (start_x + e.moveX) + 'px';
-  this.style.top = (start_y + e.moveY) + 'px';
+  this.style.left = (start_left + e.moveX) + 'px';
+  this.style.top = (start_top + e.moveY) + 'px';
+  return false;
+}).on('swipeEnd',function(e){
+  this.style.transition = '.1s';
+  this.style.left = '0px';
+  this.style.top = '0px';
+});</code>
+</pre>
+
+<h3>单向拖动</h3>
+<p>UI组件中可能会有进度选择、或数量配置类组件，需要用到单向拖动。</p>
+<p>相关事件：拖动开始<small>swipeStart</small>、拖动中<small>swipe</small>、拖动结束<small>swipeEnd</small></p>
+<div class="progress-cnt" id="progressA">
+  <div class="progress-bar">0%</div>
+</div>
+<pre>
+<code>var start_left,
+    elem = document.getElementById('progressA');
+function rangeControl(left,elem_bar){
+  //left 不能小于 0
+  left = Math.max(left,0);
+  //left加自身宽度 不能大于总宽度
+  return Math.min(left,elem.clientWidth - elem_bar.clientWidth);
+}
+util.toucher(elem)
+.on('swipeStart','.progress-bar',function(e){
+  start_left = parseInt(this.style.left) || 0;
+  this.innerHTML = '';
+}).on('swipe','.progress-bar',function(e){
+  this.style.left = rangeControl(start_left + e.moveX,this) + 'px';
+  return false;
+}).on('swipeEnd','.progress-bar',function(e){
+  this.innerHTML = Math.ceil(rangeControl(start_left + (e.moveX||0),this)/(elem.clientWidth - this.clientWidth) * 100) + '%';
+  return false;
+});</code>
+</pre><div class="progress-cnt" id="progressB">
+  <div class="progress-bar">0%</div>
+</div>
+<pre>
+<code>var start_top,
+    elem = document.getElementById('progressB');
+function rangeControl(top,elem_bar){
+  //top 不能小于 0
+  top = Math.max(top,0);
+  //left加自身宽度 不能大于总宽度
+  return Math.min(left,elem.clientWidth - elem_bar.clientWidth);
+}
+util.toucher(elem)
+.on('swipeStart','.progress-bar',function(e){
+  start_left = parseInt(this.style.left) || 0;
+  this.innerHTML = '';
+}).on('swipe','.progress-bar',function(e){
+  this.style.left = rangeControl(start_left + e.moveX,this) + 'px';
+  return false;
+}).on('swipeEnd','.progress-bar',function(e){
+  this.innerHTML = Math.ceil(rangeControl(start_left + (e.moveX||0),this)/(elem.clientWidth - this.clientWidth) * 100) + '%';
   return false;
 });</code>
 </pre>
+
+
+
     </section>
-<script src="toucher.js"></script>
+<script src="javascript/toucher.js"></script>
+<script src="javascript/highlight.js"></script>
 <script>
   /**
    * 判断dom是否拥有某个class
@@ -100,6 +171,8 @@ util.toucher(document.getElementById('assistiveTouch'))
   for(var index=codes.length-1;index>=0;index--){
     eval('(function (){' +  codes[index].innerHTML + '})()')
   }
+  
+  hljs.initHighlighting();
 </script>
 </body>
 </html>
