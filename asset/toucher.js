@@ -1,7 +1,7 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2015-3-7 01:02
+ * @modified 2015-6-5 09:37
  * 
  */
 
@@ -142,8 +142,8 @@
 		var newE = {
 			'type' : name,
 			'target' : e.target,
-			'pageX' : touch.clientX || 0,
-			'pageY' : touch.clientY || 0
+			'pageX' : touch.pageX || 0,
+			'pageY' : touch.pageY || 0
 		};
 		//为swipe事件增加交互初始位置及移动距离
 		if(name.match(/^swipe/) && e.startPosition){
@@ -165,8 +165,7 @@
 	 * 判断swipe方向
 	 */
 	function swipeDirection(x1, x2, y1, y2) {
-		return Math.abs(x1 - x2) >=
-			Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
+		return Math.abs(x1 - x2) >=	Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
 	}
 
 	/**
