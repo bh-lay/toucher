@@ -94,6 +94,7 @@ util.toucher(document.getElementById('assistiveTouch'))
   start_left = parseInt(this.style.left) || 0;
   start_top = parseInt(this.style.top) || 0;
   this.style.transition = 'none';
+  this.style.opacity = 1;
 }).on('swipe',function(e){
   this.style.left = (start_left + e.moveX) + 'px';
   this.style.top = (start_top + e.moveY) + 'px';
@@ -102,6 +103,7 @@ util.toucher(document.getElementById('assistiveTouch'))
   this.style.transition = '.1s';
   this.style.left = '0px';
   this.style.top = '0px';
+  this.style.opacity = '';
 });</code>
 </pre>
 
@@ -114,46 +116,72 @@ util.toucher(document.getElementById('assistiveTouch'))
 <pre>
 <code>var start_left,
     elem = document.getElementById('progressA');
-function rangeControl(left,elem_bar){
-  //left 不能小于 0
-  left = Math.max(left,0);
-  //left加自身宽度 不能大于总宽度
-  return Math.min(left,elem.clientWidth - elem_bar.clientWidth);
+function rangeControl(num,max){
+  num = Math.max(num,0);
+  return Math.min(num,max);
 }
 util.toucher(elem)
 .on('swipeStart','.progress-bar',function(e){
   start_left = parseInt(this.style.left) || 0;
   this.innerHTML = '';
 }).on('swipe','.progress-bar',function(e){
-  this.style.left = rangeControl(start_left + e.moveX,this) + 'px';
+  this.style.left = rangeControl(start_left + e.moveX,elem.clientWidth - this.clientWidth) + 'px';
   return false;
 }).on('swipeEnd','.progress-bar',function(e){
-  this.innerHTML = Math.ceil(rangeControl(start_left + (e.moveX||0),this)/(elem.clientWidth - this.clientWidth) * 100) + '%';
+  this.innerHTML = Math.ceil(rangeControl(start_left + (e.moveX||0),elem.clientWidth - this.clientWidth)/(elem.clientWidth - this.clientWidth) * 100) + '%';
   return false;
 });</code>
-</pre><div class="progress-cnt" id="progressB">
+</pre>
+<div class="progress-cnt" id="progressB">
   <div class="progress-bar">0%</div>
 </div>
 <pre>
 <code>var start_top,
     elem = document.getElementById('progressB');
-function rangeControl(top,elem_bar){
-  top = Math.max(top,0);
-  return Math.min(top,elem.clientHeight - elem_bar.clientHeight);
+function rangeControl(num,max){
+  num = Math.max(num,0);
+  return Math.min(num,max);
 }
 util.toucher(elem)
 .on('swipeStart','.progress-bar',function(e){
   start_top = parseInt(this.style.top) || 0;
   this.innerHTML = '';
 }).on('swipe','.progress-bar',function(e){
-  this.style.top = rangeControl(start_top + e.moveY,this) + 'px';
+  this.style.top = rangeControl(start_top + e.moveY,elem.clientHeight - this.clientHeight) + 'px';
   return false;
 }).on('swipeEnd','.progress-bar',function(e){
-  this.innerHTML = Math.ceil(rangeControl(start_top + (e.moveY||0),this)/(elem.clientHeight - this.clientHeight) * 100) + '%';
+  this.innerHTML = Math.ceil(rangeControl(start_top + (e.moveY||0),elem.clientHeight - this.clientHeight)/(elem.clientHeight - this.clientHeight) * 100) + '%';
   return false;
 });</code>
 </pre>
 
+<h3>限制性拖动</h3>
+<p>UI组件中可能会有进度选择、或数量配置类组件，需要用到单向拖动。</p>
+<p>相关事件：拖动开始<small>swipeStart</small>、拖动中<small>swipe</small>、拖动结束<small>swipeEnd</small></p>
+<div class="progress-cnt" id="progressC">
+  <div class="progress-bar"></div>
+</div>
+<pre>
+<code>var start_left,
+    start_top,
+    elem = document.getElementById('progressC');
+function rangeControl(num,max){
+  num = Math.max(num,0);
+  return Math.min(num,max);
+}
+util.toucher(elem)
+.on('swipeStart','.progress-bar',function(e){
+  start_left = parseInt(this.style.left) || 0;
+  start_top = parseInt(this.style.top) || 0;
+  this.innerHTML = '';
+}).on('swipe','.progress-bar',function(e){
+  this.style.left = rangeControl(start_left + e.moveX,elem.clientWidth - this.clientWidth) + 'px';
+  this.style.top = rangeControl(start_top + e.moveY,elem.clientHeight - this.clientHeight) + 'px';
+  return false;
+}).on('swipeEnd','.progress-bar',function(e){
+  return false;
+});</code>
+</pre>
 
 
     </section>
@@ -192,7 +220,7 @@ util.toucher(elem)
   }else{
     var a = document.createElement('div');
     addClass(a,'error-pop');
-    a.innerHTML = '不支持触摸事件，若要体验demo，请使用移动设备或模拟器。'
+    a.innerHTML = '当前设备不支持触摸，若要体验demo，请使用移动设备或模拟器'
     document.body.appendChild(a);
   }
   hljs.initHighlighting();
