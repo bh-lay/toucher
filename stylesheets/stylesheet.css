@@ -277,10 +277,11 @@ a {
 }
 .assistiveTouch{
   position: relative;
-  width: 120px;
-  height: 120px;
-  border-radius: 20px;
+  width: 70px;
+  height: 70px;
+  border-radius: 14px;
   background: rgba(0,0,0,.7);
+  opacity: .7;
 }
 .assistiveTouch:before,
 .assistiveTouch:after,
@@ -288,25 +289,27 @@ a {
   content: '';
   position: absolute;
   border-radius: 100%;
-  background: rgba(255,255,255,.5);
+  background: rgba(255,255,255,.6);
+  box-shadow: 0 0 2px rgba(0,0,0,.5);
 }
 .assistiveTouch:before{
-  width: 100px;
-  height: 100px;
-  top: 10px;
-  left: 10px;
+  width: 56px;
+  height: 56px;
+  top: 7px;
+  left: 7px;
 }
 .assistiveTouch span{
-  width: 80px;
-  height: 80px;
-  top: 20px;
-  left: 20px;
+  width: 46px;
+  height: 46px;
+  top: 12px;
+  left: 12px;
 }
 .assistiveTouch:after{
-  width: 60px;
-  height: 60px;
-  top: 30px;
-  left: 30px;
+  width: 36px;
+  height: 36px;
+  top: 17px;
+  left: 17px;
+  background: #fff;
 }
 
 .progress-cnt{
@@ -332,6 +335,10 @@ a {
   height: 200px;
   margin: 0 auto 20px;
 }
+#progressC{
+  height: 200px;
+  margin: 0 auto 20px;
+}
 
 .error-pop{
   position: fixed;
@@ -347,8 +354,9 @@ a {
   line-height: 20px;
 }
 .error-pop:before{
+  margin-right: 5px;
   content: '●';
-  color: #fa0;
+  color: #f50;
   font-weight: bolder;
   font-size: 30px;
   vertical-align: sub;
