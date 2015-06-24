@@ -1,9 +1,7 @@
-toucher
-=======
 #toucher是什么
 toucher是一个面向移动端web开发，通过监听原生事件模拟手势事件的库。
 
-相关链接：[demo](http://bh-lay.github.io/toucher/)、[实现原理](http://bh-lay.com/blog/14e212bdbeb)
+**相关链接：**[demo](http://bh-lay.github.io/toucher/)、[实现原理](http://bh-lay.com/blog/14e212bdbeb)
 
 #目前支持哪些事件
 基本事件
