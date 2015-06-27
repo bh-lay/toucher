@@ -1,7 +1,7 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2015-3-7 01:02
+ * @modified 2015-6-23 00:25
  * 
  */
 
@@ -142,8 +142,8 @@
 		var newE = {
 			'type' : name,
 			'target' : e.target,
-			'pageX' : touch.clientX || 0,
-			'pageY' : touch.clientY || 0
+			'pageX' : touch.pageX || 0,
+			'pageY' : touch.pageY || 0
 		};
 		//为swipe事件增加交互初始位置及移动距离
 		if(name.match(/^swipe/) && e.startPosition){
@@ -165,8 +165,7 @@
 	 * 判断swipe方向
 	 */
 	function swipeDirection(x1, x2, y1, y2) {
-		return Math.abs(x1 - x2) >=
-			Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
+		return Math.abs(x1 - x2) >=	Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
 	}
 
 	/**
@@ -202,11 +201,16 @@
 			clearTimeout(touchDelay);
 		}
 		
+      
+        //断定此次事件为轻击事件
+        function isSingleTap(){
+            actionOver();
+            EMIT.call(this_touch,'singleTap',eventMark);
+        }
 		//触屏开始
 		function touchStart(e){
 			//缓存事件
 			eventMark = e;
-		
 			x1 = e.touches[0].pageX;
 			y1 = e.touches[0].pageY;
 			x2 = 0;
@@ -230,12 +234,12 @@
 				return
 			}
 			var now = new Date();
-			if(now - lastTouchTime > 260){
-				touchDelay = setTimeout(function(){
-					//断定此次事件为轻击事件
-					actionOver();
-					EMIT.call(this_touch,'singleTap',eventMark);
-				},250);
+			 //若未监听doubleTap，直接响应
+            if(!this_touch._events.doubleTap || this_touch._events.doubleTap.length == 0){
+                isSingleTap();
+            }else if(now - lastTouchTime > 200){
+                //延迟响应
+                touchDelay = setTimeout(isSingleTap,190);
 			}else{
 				clearTimeout(touchDelay);
 				actionOver(e);
@@ -260,16 +264,15 @@
 			if(!isActive){
 				return
 			}
-  	  x2 = e.touches[0].pageX
-      y2 = e.touches[0].pageY
+            x2 = e.touches[0].pageX
+            y2 = e.touches[0].pageY
 			if(Math.abs(x1-x2)>2 || Math.abs(y1-y2)>2){
 				//断定此次事件为移动手势
 				var direction = swipeDirection(x1, x2, y1, y2);
 				EMIT.call(this_touch,'swipe' + direction,e);
 			}else{
 				//断定此次事件为轻击事件
-				actionOver(e);
-				EMIT.call(this_touch,'singleTap',e);
+				isSingleTap();
 			}
 			actionOver(e);
 		}
