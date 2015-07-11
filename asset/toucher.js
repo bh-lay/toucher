@@ -143,7 +143,9 @@
 			'type' : name,
 			'target' : e.target,
 			'pageX' : touch.pageX || 0,
-			'pageY' : touch.pageY || 0
+			'pageY' : touch.pageY || 0,
+			'clientX' : touch.clientX || 0,
+			'clientY' : touch.clientY || 0
 		};
 		//为swipe事件增加交互初始位置及移动距离
 		if(name.match(/^swipe/) && e.startPosition){
