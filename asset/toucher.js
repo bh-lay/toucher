@@ -16,7 +16,6 @@
 	
 	//提供CommonJS规范的接口
 	global.define && define(function(require,exports,module){
-		//对外接口
 		return factory;
 	});
 })(this,document,function(window,document){
@@ -26,47 +25,7 @@
 	function hasClass(dom,classSingle){
 		return dom.className.match(new RegExp('(\\s|^)' + classSingle +'(\\s|$)'));
 	}
-
-	/**
-	 * @method 向句柄所在对象增加事件监听
-	 * @description 支持链式调用
-	 * 
-	 * @param string 事件名
-	 * @param [string] 事件委托至某个class（可选）
-	 * @param function 符合条件的事件被触发时需要执行的回调函数 
-	 * 
-	 */
-	function ON(eventStr,a,b){
-		this._events = this._events || {};
-		var className,fn;
-		if(typeof(a) == 'string'){
-			className = a.replace(/^\./,'');
-			fn = b;
-		}else{
-			className = null;
-			fn = a;
-		}
-		//检测callback是否合法,事件名参数是否存在·
-		if(typeof(fn) == 'function' && eventStr && eventStr.length){
-			var eventNames = eventStr.split(/\s+/);
-			for(var i=0,total=eventNames.length;i<total;i++){
-			
-				var eventName = eventNames[i];
-				//事件堆无该事件，创建一个事件堆
-				if(!this._events[eventName]){
-					this._events[eventName] = [];
-				}
-				this._events[eventName].push({
-					'className' : className,
-					'fn' : fn
-				});
-			}
-		}
-
-		//提供链式调用的支持
-		return this;
-	}
-
+	
 	/**
 	 * @method 事件触发器
 	 * @description 根据事件最原始被触发的target，逐级向上追溯事件绑定
@@ -78,7 +37,7 @@
 		this._events = this._events || {};
 		//事件堆无该事件，结束触发
 		if(!this._events[eventName]){
-			return
+			return;
 		}
 		//记录尚未被执行掉的事件绑定
 		var rest_events = this._events[eventName];
@@ -117,7 +76,7 @@
 				if(hasClass(target,classStr)){
 					//返回false停止事件冒泡及后续事件，其余继续执行
 					if(event_callback(eventName,callback,target,e) == false){
-						return
+						return;
 					}
 				}else{
 					//不符合执行条件，压回到尚未执行掉的列表中
@@ -137,23 +96,25 @@
 	 * @param[object]原生event对象
 	 */
 	function event_callback(name,fn,dom,e){
-		var touch = e.touches.length ? e.touches[0] : {};
-		
-		var newE = {
-			'type' : name,
-			'target' : e.target,
-			'pageX' : touch.pageX || 0,
-			'pageY' : touch.pageY || 0
-		};
+		//优先使用自定义的touches（目前是为了解决touchEnd无touches的问题）
+		var touches = e.plugTouches || e.touches,
+			touch = touches.length ? touches[0] : {},
+			newE = {
+				type : name,
+				target : e.target,
+				pageX : touch.pageX,
+				pageY : touch.pageY
+			};
 		//为swipe事件增加交互初始位置及移动距离
-		if(name.match(/^swipe/) && e.startPosition){
-			newE.startX = e.startPosition['pageX'],
-			newE.startY = e.startPosition['pageY'],
-			newE.moveX = newE.pageX - newE.startX,
-			newE.moveY = newE.pageY - newE.startY
+		if(name.match(/^swipe/) && e.plugStartPosition){
+			newE.startX = e.plugStartPosition.pageX;
+			newE.startY = e.plugStartPosition.pageY;
+			newE.moveX = newE.pageX - newE.startX;
+			newE.moveY = newE.pageY - newE.startY;
 		}
+		//执行绑定事件的回调，并记录返回值
 		var call_result = fn.call(dom,newE);
-		//若绑定方法返回false，阻止浏览器默认事件
+		//若返回false，阻止浏览器默认事件
 		if(call_result == false){
 			e.preventDefault();
 			e.stopPropagation();
@@ -165,7 +126,7 @@
 	 * 判断swipe方向
 	 */
 	function swipeDirection(x1, x2, y1, y2) {
-		return Math.abs(x1 - x2) >=	Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down')
+		return Math.abs(x1 - x2) >=	Math.abs(y1 - y2) ? (x1 - x2 > 0 ? 'Left' : 'Right') : (y1 - y2 > 0 ? 'Up' : 'Down');
 	}
 
 	/**
@@ -201,12 +162,11 @@
 			clearTimeout(touchDelay);
 		}
 		
-      
-        //断定此次事件为轻击事件
-        function isSingleTap(){
-            actionOver();
-            EMIT.call(this_touch,'singleTap',eventMark);
-        }
+		//断定此次事件为轻击事件
+		function isSingleTap(){
+			actionOver();
+			EMIT.call(this_touch,'singleTap',eventMark);
+		}
 		//触屏开始
 		function touchStart(e){
 			//缓存事件
@@ -228,18 +188,21 @@
 		}
 		//触屏结束
 		function touchend(e){
-			//touchend中，拿不到坐标位置信息，故使用全局保存下的事件
-			EMIT.call(this_touch,'swipeEnd',eventMark);
+			//touchend中，拿不到坐标位置信息，故使用全局保存下数据
+			e.plugStartPosition = eventMark.plugStartPosition;
+			e.plugTouches = eventMark.touches;
+			
+			EMIT.call(this_touch,'swipeEnd',e);
 			if(!isActive){
-				return
+				return;
 			}
 			var now = new Date();
-			 //若未监听doubleTap，直接响应
-            if(!this_touch._events.doubleTap || this_touch._events.doubleTap.length == 0){
-                isSingleTap();
-            }else if(now - lastTouchTime > 200){
-                //延迟响应
-                touchDelay = setTimeout(isSingleTap,190);
+			//若未监听doubleTap，直接响应
+			if(!this_touch._events.doubleTap || this_touch._events.doubleTap.length == 0){
+				isSingleTap();
+			}else if(now - lastTouchTime > 200){
+				//延迟响应
+				touchDelay = setTimeout(isSingleTap,190);
 			}else{
 				clearTimeout(touchDelay);
 				actionOver(e);
@@ -254,7 +217,7 @@
 			//缓存事件
 			eventMark = e;
 			//在原生事件基础上记录初始位置（为swipe事件增加参数传递）
-			e.startPosition = {
+			e.plugStartPosition = {
 				pageX : x1,
 				pageY : y1
 			};
@@ -262,10 +225,10 @@
 			EMIT.call(this_touch,'swipe',e);
 
 			if(!isActive){
-				return
+				return;
 			}
-            x2 = e.touches[0].pageX
-            y2 = e.touches[0].pageY
+			x2 = e.touches[0].pageX;
+			y2 = e.touches[0].pageY;
 			if(Math.abs(x1-x2)>2 || Math.abs(y1-y2)>2){
 				//断定此次事件为移动手势
 				var direction = swipeDirection(x1, x2, y1, y2);
@@ -310,18 +273,56 @@
 	 * touch类
 	 * 
 	 */
-	function touch(DOM,param){
+	function Touch(DOM,param){
 		var param = param || {};
 
 		this.dom = DOM;
+		//存储监听事件的回调
+		this._events = {};
 		//监听DOM原生事件
 		eventListener.call(this,this.dom);
 	}
-	//拓展事件绑定方法
-	touch.prototype['on'] = ON;
+	/**
+	 * @method 增加事件监听
+	 * @description 支持链式调用
+	 * 
+	 * @param string 事件名
+	 * @param [string] 事件委托至某个class（可选）
+	 * @param function 符合条件的事件被触发时需要执行的回调函数 
+	 * 
+	 **/
+	Touch.prototype.on = function ON(eventStr,a,b){
+		var className,fn;
+		if(typeof(a) == 'string'){
+			className = a.replace(/^\./,'');
+			fn = b;
+		}else{
+			className = null;
+			fn = a;
+		}
+		//检测callback是否合法,事件名参数是否存在·
+		if(typeof(fn) == 'function' && eventStr && eventStr.length){
+			var eventNames = eventStr.split(/\s+/);
+			for(var i=0,total=eventNames.length;i<total;i++){
+			
+				var eventName = eventNames[i];
+				//事件堆无该事件，创建一个事件堆
+				if(!this._events[eventName]){
+					this._events[eventName] = [];
+				}
+				this._events[eventName].push({
+					className : className,
+					fn : fn
+				});
+			}
+		}
+		
+		//提供链式调用的支持
+		return this;
+	};
 	
 	//对外提供接口
 	return function (dom){
-		return new touch(dom);
+		return new Touch(dom);
 	};
 });
