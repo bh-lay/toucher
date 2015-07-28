@@ -103,7 +103,9 @@
 				type : name,
 				target : e.target,
 				pageX : touch.pageX,
-				pageY : touch.pageY
+				pageY : touch.pageY,
+				clientX : touch.clientX || 0,
+				clientY : touch.clientY || 0
 			};
 		//为swipe事件增加交互初始位置及移动距离
 		if(name.match(/^swipe/) && e.plugStartPosition){
