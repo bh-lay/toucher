@@ -103,13 +103,13 @@ bodyTouch.on('singleTap',function(e){
 	$('.console3').append('longTap'+I()+'<br/>');
 }).on('swipeStart',function(e){
 	$('.console3').append('swipeStart'+I()+'<br/>');
-	console.log(this,e);
+	//console.log(this,e);
 }).on('swipe',function(e){
 	$('.console3').append('swipe'+I()+'<br/>');
-	console.log(this,e);
+	//console.log(this,e);
 }).on('swipeEnd',function(e){
 	$('.console3').append('swipeEnd'+I()+'<br/>');
-	console.log(this,e);
+	//console.log(this,e);
 }).on('swipeUp',function(e){
 	$('.console3').append('swipeUp'+I()+'<br/>');
 }).on('swipeRight',function(e){
@@ -136,7 +136,7 @@ bodyTouch.on('swipeStart','.checkA',function(e){
 	return false;
 }).on('swipeEnd','.checkA',function(e){
 	$('.console1').append('swipeEnd<br/>');
-	console.log(this,e);
+//	console.log(this,e);
 	$(this).animate({
 		'position':'static',
 		'top':0,
