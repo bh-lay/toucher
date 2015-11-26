@@ -71,10 +71,14 @@
             'imgs/window_e02f4ca.jpg'
           ];
       Array.prototype.forEach.call(node_pics,function(node,index){
+        //监听点击事件
         new util.toucher(node).on('singleTap',function(){
             new swiper(big_pic_urls,index);
         });
+        //偷偷加载图片
+        new Image().src=big_pic_urls[index];
       });
+
     })();
   </script>
 </body>
