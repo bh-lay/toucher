@@ -215,8 +215,8 @@ body {
   }
 }
 .zoomIn {
-  -webkit-animation: zoomIn 0.3s ease-in-out;
-  animation: zoomIn 0.3s ease-in-out;
+  -webkit-animation: zoomIn 0.3s ease-in-out forwards;
+  animation: zoomIn 0.3s ease-in-out forwards;
 }
 .zoomOut {
   -webkit-animation: zoomOut 0.2s ease-in-out forwards;
