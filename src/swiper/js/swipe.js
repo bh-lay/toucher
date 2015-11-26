@@ -49,7 +49,9 @@
     me.total = me.swiper_items.length;
     me.refresh();
     me.scrollToItem(me.index,false);
-
+    Array.prototype.forEach.call(me.swiper_items,function(node,index){
+      node.style['background-image'] = 'url(' + pics[index] + ')';
+    });
     new util.toucher(me.node)
     .on('swipe',function(){
       return false;

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Document</title>
-  <link rel="stylesheet" href="/style_5ec835e.css">
+  <link rel="stylesheet" href="/style.less">
 </head>
 <body>
   <div class="card">
@@ -20,13 +20,13 @@
     </div>
     <div class="pics">
       <div class="item">
-        <img src="/imgs/me_thumb_206a0fd.jpg">
+        <img src="/imgs/me_thumb.jpg">
       </div>
       <div class="item">
-        <img src="/imgs/psb_thumb_e125261.jpg">
+        <img src="/imgs/psb_thumb.jpg">
       </div>
       <div class="item">
-        <img src="/imgs/window_thumb_c99152e.jpg">
+        <img src="/imgs/window_thumb.jpg">
       </div>
     </div>
     <div class="comment">
@@ -37,9 +37,9 @@
 <div class="swiper zoomIn">
   <div class="swiper-list">
     <div class="swiper-list-body">
-      <div class="swiper-item" style="background-image:url(imgs/me.jpg)"></div>
-      <div class="swiper-item" style="background-image:url(imgs/psb.jpeg)"></div>
-      <div class="swiper-item" style="background-image:url(imgs/window.jpg)"></div>
+      <div class="swiper-item"></div>
+      <div class="swiper-item"></div>
+      <div class="swiper-item"></div>
     </div>
   </div>
   <div class="swiper-num">
@@ -60,8 +60,22 @@
   </div>
 </div>
   </script>
-  <script src="/js/toucher_2cb1d8f.js"></script>
-  <script src="/js/swipe_f31a7bb.js"></script>
-  <script src="/js/index_90a518a.js"></script>
+  <script src="/js/toucher.js"></script>
+  <script src="/js/swipe.js"></script>
+  <script type="text/javascript">
+    (function(){
+      var node_pics = document.getElementsByClassName('item'),
+          big_pic_urls = [
+            __uri('/imgs/me.jpg'),
+            __uri('/imgs/psb.jpeg'),
+            __uri('/imgs/window.jpg')
+          ];
+      Array.prototype.forEach.call(node_pics,function(node,index){
+        new util.toucher(node).on('singleTap',function(){
+            new swiper(big_pic_urls,index);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
