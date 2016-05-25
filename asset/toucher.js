@@ -1,7 +1,7 @@
 /**
  * @author 剧中人
  * @github https://github.com/bh-lay/toucher
- * @modified 2015-6-23 00:25
+ * @modified 2016-5-25 23:27
  * 
  */
 
@@ -19,13 +19,21 @@
 		return factory;
 	});
 })(this,document,function(window,document){
+
 	/**
-	 * 判断是否拥有某个class
-	 */
-	function hasClass(dom,classSingle){
-		return dom.className.match(new RegExp('(\\s|^)' + classSingle +'(\\s|$)'));
-	}
-	
+	* class 操作
+	*/
+	var supports_classList = !!document.createElement('div').classList,
+		// 是否含有某个 class
+		hasClass = supports_classList ? function( node, classSingle ){
+			return node && node.classList && node.classList.contains( classSingle );
+		} : function ( node, classSingle ){
+			if( !node || typeof( node.className ) !== 'string'  ){
+				return false;
+			}
+			return !! node.className.match(new RegExp('(\\s|^)' + classSingle + '(\\s|$)'));
+		};
+
 	/**
 	 * @method 事件触发器
 	 * @description 根据事件最原始被触发的target，逐级向上追溯事件绑定
