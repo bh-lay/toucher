@@ -1,9 +1,9 @@
-#toucher是什么
+# toucher是什么
 toucher是一个面向移动端web开发，通过监听原生事件模拟手势事件的库。
 
-####[使用案例](http://bh-lay.github.io/toucher/)、[demo/图像预览](http://bh-lay.github.io/toucher/swiper/)、[实现原理](http://bh-lay.com/blog/14e212bdbeb)
+#### [使用案例](http://bh-lay.github.io/toucher/)、[demo/图像预览](http://bh-lay.github.io/toucher/swiper/)、[实现原理](http://bh-lay.com/blog/14e212bdbeb)
 
-#目前支持哪些事件
+# 目前支持哪些事件
 基本事件
  * singleTap：轻击
  * doubleTap：双击
@@ -18,15 +18,15 @@ toucher是一个面向移动端web开发，通过监听原生事件模拟手势�
  * swipe：滑动（阻止浏览器默认事件，滑动过程效果更佳）
  * swipeEnd：滑动结束
 
-#说明
+# 说明
 目前尚不支持双指操作的事件，此类事件可能会在下次大的更新之后作为补充加入进来。
 
 事件触发时不阻止浏览器默认事件，若要用于拖动操作，或滑动更为细腻，可在swipe事件中使用“return false;”阻止浏览器默认事件！
 
-#DEMO
+# DEMO
 请使用移动设备或使用调试工具模拟移动设备查看 [demo/案例](http://bh-lay.github.io/toucher/)、[demo/图像预览](http://bh-lay.github.io/toucher/swiper/)
 
-#如何使用
+# 如何使用
 接口提供了链式调用的实现，及事件委托（仅支持class）。
 
 ```javascript
