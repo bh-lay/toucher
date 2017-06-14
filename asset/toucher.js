@@ -33,7 +33,7 @@
 			}
 			return !! node.className.match(new RegExp('(\\s|^)' + classSingle + '(\\s|$)'));
 		};
-
+	var supportTouch = "ontouchend" in document ? true : false;
 	/**
 	 * @method 事件触发器
 	 * @description 根据事件最原始被触发的target，逐级向上追溯事件绑定
@@ -249,34 +249,24 @@
 			}
 			actionOver(e);
 		}
+		if (supportTouch) {
+			DOM.addEventListener('touchstart',touchStart);
+			DOM.addEventListener('touchend',touchend);
+			DOM.addEventListener('touchmove',touchmove);
+			DOM.addEventListener('touchcancel',actionOver);
+		} else {
+			DOM.addEventListener('MSPointerDown',touchStart);
+			DOM.addEventListener('pointerdown',touchStart);
 
-		/**
-		 * 对开始手势的监听
-		 */
-		DOM.addEventListener('touchstart',touchStart);
-		DOM.addEventListener('MSPointerDown',touchStart);
-		DOM.addEventListener('pointerdown',touchStart);
+			DOM.addEventListener('MSPointerUp',touchend);
+			DOM.addEventListener('pointerup',touchend);
 
-		/**
-		 * 对手势结束的监听（轻击）
-		 */
-		DOM.addEventListener('touchend',touchend);
-		DOM.addEventListener('MSPointerUp',touchend);
-		DOM.addEventListener('pointerup',touchend);
+			DOM.addEventListener('MSPointerMove',touchmove);
+			DOM.addEventListener('pointermove',touchmove);
 
-		/**
-		 * 对移动手势的监听
-		 */
-		DOM.addEventListener('touchmove',touchmove);
-		DOM.addEventListener('MSPointerMove',touchmove);
-		DOM.addEventListener('pointermove',touchmove);
-
-		/**
-		 * 对移动结束的监听
-		 */
-		DOM.addEventListener('touchcancel',actionOver);
-		DOM.addEventListener('MSPointerCancel',actionOver);
-		DOM.addEventListener('pointercancel',actionOver);
+			DOM.addEventListener('MSPointerCancel',actionOver);
+			DOM.addEventListener('pointercancel',actionOver);
+		}
 	}
 	
 	/**
