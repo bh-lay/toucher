@@ -1,3 +1,10 @@
+/**
+ * @file  基于toucher.js的图像预览组件
+ * @author bh_lay@126.com
+ * Github https://github.com/bh-lay/toucher/
+ *
+ **/
+
 (function(){
   /**
    * 判断dom是否拥有某个class
