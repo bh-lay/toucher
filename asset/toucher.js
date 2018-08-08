@@ -321,6 +321,48 @@
 		return this;
 	};
 	
+	    /**
+	 *  @method 删除事件监听
+     * @description 支持链式调用
+	 *
+     * @param eventStr
+     * @param a
+     * @param b
+     * @returns {Touch}
+     */
+    Touch.prototype.off = function OFF(eventStr,a,b){
+        var className,fn;
+        if(typeof(a) == 'string'){
+            className = a.replace(/^\./,'');
+            fn = b;
+        }else{
+            className = null;
+            fn = a;
+        }
+        //检测callback是否合法,事件名参数是否存在·
+        if(typeof(fn) == 'function' && eventStr && eventStr.length){
+            var eventNames = eventStr.split(/\s+/);
+
+            for(var i=0,total=eventNames.length;i<total;i++){
+
+                var eventName = eventNames[i];
+                //事件堆无该事件，创建一个事件堆
+                if(!this._events[eventName]){
+                    this._events[eventName] = [];
+                    return this;
+                }
+                for(var i = 0;i<this._events[eventName].length;i++){
+                	if(this._events[eventName][i].fn == fn){
+                        this._events[eventName].splice(i,1);
+					}
+				}
+            }
+        }
+
+        //提供链式调用的支持
+        return this;
+    };
+	
 	//对外提供接口
 	return function (dom){
 		return new Touch(dom);
